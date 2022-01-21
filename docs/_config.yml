@@ -1,0 +1,19 @@
+# To simplify references to GitHub:
+github: "https://github.com/lusee-night/lusee-night.github.io"
+
+collections:
+  content:
+    output: true
+    permalink: /content/:title.html
+
+exclude:
+  - .sass-cache/
+  - .jekyll-cache/
+  - gemfiles/
+  - Gemfile
+  - Gemfile.lock
+  - node_modules/
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
