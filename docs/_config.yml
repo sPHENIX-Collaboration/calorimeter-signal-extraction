@@ -1,5 +1,9 @@
 # To simplify references to GitHub:
-github: "https://github.com/lusee-night/lusee-night.github.io"
+github: "https://sphenix-collaboration.github.io/calorimeter-signal-extraction/"
+
+baseurl: /
+
+# calorimeter-signal-extraction/
 
 collections:
   content:
