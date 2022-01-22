@@ -1,7 +1,7 @@
 			<nav id="sidebar">
 				<div class="p-4 pt-5">
 		  		<a href="{{ '/' | relative_url }}">
-          <img src="{{'images/logo/sphenix-logo-custom-bg.png' | relative_url}}" width="220"/>
+          <img src="{{'images/logo/sphenix-logo-custom-bg.png' | relative_url}}" width="180"/>
           </a>
 	        <ul class="list-unstyled components mb-5">
             <li>
