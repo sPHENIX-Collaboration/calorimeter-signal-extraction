@@ -2,3 +2,6 @@
 data/
 data/*
 
+# Reject Jupyter artefacts
+.ipynb_checkpoints
+.ipynb_checkpoints/*

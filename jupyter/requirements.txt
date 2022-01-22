@@ -1,0 +1,6 @@
+total 104
+-rw-rw-r-- 1 maxim maxim     0 Jan 15  2019 README.md
+-rw-rw-r-- 1 maxim maxim  2083 Jan 14 11:42 j2.ipynb
+-rw-rw-r-- 1 maxim maxim 10012 Jan 14 11:43 j1.ipynb
+-rw-rw-r-- 1 maxim maxim 46225 Jan 18 16:59 p2exp.ipynb
+-rw-rw-r-- 1 maxim maxim     0 Jan 22 17:58 requirements.txt
