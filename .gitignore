@@ -5,3 +5,10 @@ data/*
 # Reject Jupyter artefacts
 .ipynb_checkpoints
 .ipynb_checkpoints/*
+
+# ROOT files -- these need to be kept elsewhere
+*.root
+
+# Just in case...
+*.so
+*~
