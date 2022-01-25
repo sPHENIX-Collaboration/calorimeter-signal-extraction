@@ -10,9 +10,8 @@ Branch name is 'electron_adc_counts'.
 
 The 32nd time bin of the waveform always contains -999 and is useless,
 so by default we exclude it
-
-
 '''
+
 ##################################
 import uproot
 import numpy as np
@@ -20,25 +19,6 @@ import matplotlib.pyplot as plt
 import argparse
 ##################################
 
-def branch2array(dir, b, N):
-    '''
-    Returns a numpy array based on the requested branch in the ROOT file.
-    Relies on the specific format of the branch name in the files of this type.
-    '''
-    
-    if(b==31):
-        branch = dir['chnlnumber']
-    else:
-        branch = dir[f'''electron_adc_counts_{b}''']
-    
-    return branch.array(library='np', entry_stop=N)
-
-def channel2array(dir, N):
-    '''
-    Converts a branch with the channel number to an array
-    '''
-    branch = dir['chnlnumber']
-    return branch.array(library='np', entry_stop=N)
 #####################################
 
 parser = argparse.ArgumentParser()
