@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 '''
-Root to numpy converter (from file to file)
+ROOT to numpy converter (from file to file)
+Read the version of ROOT files with EMCal testbeam data.
 
-Read the most recent version of ROOT files with EMCal testbeam.
+Data Packing:
 
 The first index in the array is the 64 channel numbers
-and the second is the time steps of the waveform.
+and the second is the time binss of the waveform.
 Branch name is 'electron_adc_counts'.
 
 The 32nd time bin of the waveform always contains -999 and is useless,
@@ -19,12 +20,8 @@ import matplotlib.pyplot as plt
 import argparse
 ##################################
 
-#####################################
 
 parser = argparse.ArgumentParser()
-
-parser.add_argument("-c", "--csvout",   type=str,
-                    help="If specified, name of the CSV file to output the data sample to and exit", default='')
 
 parser.add_argument("-i", "--infile",   type=str,   help="Input ROOT file",     default='')
 parser.add_argument("-o", "--outfile",  type=str,   help="Output numpy file",   default='')
@@ -67,13 +64,11 @@ else:
 if verbose: print(f'''Will process {N} entries''')
 
 branch = dir['electron_adc_counts']
-
 X = branch.array(library='np', entry_stop=N)
 
-if verbose : print(f'''Created an array: {X.shape}''')
-
-
-if verbose : print(f'''Saving to file {outfile} ''')
+if verbose :
+    print(f'''Created an array: {X.shape}''')
+    print(f'''Saving to file {outfile} ''')
 
 with open(outfile, 'wb') as f:
     if(args.zip):
