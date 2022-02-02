@@ -1,5 +1,14 @@
 import  numpy as np
 
+
+def r2(F, vec=None, data=None, pars=None):
+    # _ = F(vec, *pars)
+
+    ss_res = np.sum((data - F(vec, *pars)) ** 2)
+    ss_tot = np.sum((data - np.mean(data)) ** 2)
+    return (1 - (ss_res / ss_tot))
+
+
 def landau(x, *par):
     '''
     par[0] - origin
@@ -8,13 +17,8 @@ def landau(x, *par):
     par[3] - pedestal    
     par[4] - decay in the second term
     '''
+    w           = x - par[0]
+    divider     = par[2]
+    my_exp      = np.exp(-(w+np.exp(-float(par[4])*w))/divider)
 
-    w = np.array((x - par[0]), dtype=np.float128)
-
-    divider = par[2]
-    if divider < 0.0001: divider = 0.0001
-
-    my_exp = np.exp(-(w+np.exp(-float(par[4])*w))/divider)
-    scaled = par[1]*np.array(my_exp, dtype=np.float64)
-
-    return scaled+par[3]
+    return par[1]*my_exp + par[3]
