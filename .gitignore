@@ -2,6 +2,10 @@
 data/
 data/*
 
+# The usual
+__pycache__
+__pycache__/*
+
 # Reject Jupyter artefacts
 .ipynb_checkpoints
 .ipynb_checkpoints/*
