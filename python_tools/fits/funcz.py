@@ -1,12 +1,10 @@
 import  numpy as np
 import math
-# from decimal import Decimal
 
 '''
-A utility module containing fitting function
-and some metric calcultors
+Fitting functions and some metric calculators
 '''
-
+##############################################
 ###
 def r2(F, vec=None, data=None, pars=None):
     # _ = F(vec, *pars)
@@ -31,6 +29,7 @@ def landau(x, *par):
     return par[1]*my_exp + par[3]
 
 
+###############################################
 ###
 class Landau:
     def __init__(self):

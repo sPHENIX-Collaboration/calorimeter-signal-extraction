@@ -103,7 +103,7 @@ new_length = L-1+5 # reserve 5 words for the training parameters
 if (channel!=-1): 
     cnt_ped, cnt_sig, cnt_bad = (0, 0, 0)
     minima, x_min, x_max  = ([], [], [])
-    r2s, amp, newamp, ampdiff, times, fxamp, fxt, newsaved = ([], [], [], [], [], [], [], [])
+    r2s, amp, newamp, ampdiff, times, fxamp, fxt, newsaved, fx_new = ([], [], [], [], [], [], [], [], [])
 
     dpd = []
 
@@ -188,10 +188,15 @@ if (channel!=-1):
         fixed_guess = np.take(popt, [0, 1, 2, 4])
 
         numbers = np.array(wave)
-        n = 5
+        n = 4
         indices = (-numbers).argsort()[:n]
         indices.sort()
-        # for ind in indices: print(ind, numbers[ind])
+
+        if (np.amax(np.diff(indices))) > 1: continue
+        #for ind in indices: print(ind, numbers[ind])
+        indices = np.insert(indices, 0, [indices[0]-1])
+        #for ind in indices: print(ind, numbers[ind])
+        if indices[0]<2: continue
 
         short_wave = np.take(wave, indices)
 
@@ -218,10 +223,19 @@ if (channel!=-1):
             FloatingPointError_cnt+=1
             continue
 
-        times.append(land.origin(*popt))
+        fx_r2   = funcz.r2(Func, vec=indices, data=short_wave, pars=popt_fx)
+
+        if fx_r2<0.90: continue
+
+        the_time = land.origin(*popt)
+
+        times.append(the_time)
         fxamp.append(fxval)
         fxt.append(lfpd.origin(*popt_fx))
         newsaved.append(newamplitude)
+
+        # if(the_time<15):
+        fx_new.append(fxval-newamplitude)
 
         if(cnt_sig<nplot):
             # print(short_wave)
@@ -238,23 +252,23 @@ if (channel!=-1):
         # adding the "Y" vector: origin, peak value, pedestal
 
         # --- FIXME --- origin is displaced
-        result  = np.array([popt[0], peak, popt[3]])
+    #    result  = np.array([popt[0], peak, popt[3]])
         
-        appended = np.append(wave, result)
+    #    appended = np.append(wave, result)
 
-        if first:
-            output_array = np.array([appended])
-            first = False
-        else:
-            output_array = np.append(output_array,[appended], axis=0)
+    #     if first:
+    #         output_array = np.array([appended])
+    #         first = False
+    #     else:
+    #         output_array = np.append(output_array,[appended], axis=0)
 
-    if verbose: print(f'''Created an array: {output_array.shape}''')
+    # if verbose: print(f'''Created an array: {output_array.shape}''')
 
-    if(outfile!=''):
-        with open(outfile, 'wb') as f_out:
-            np.save(f_out, output_array)
+    # if(outfile!=''):
+    #     with open(outfile, 'wb') as f_out:
+    #         np.save(f_out, output_array)
 
-        f_out.close()
+    #     f_out.close()
 
     if verbose:
         print(f'''
@@ -289,24 +303,29 @@ if (channel!=-1):
     ax5.set_xlabel('Max Count - Ped')
     ax5.set_ylabel('Fit height')
 
-    _ = ax6.hist2d(amp, newamp, range=((-0.5, 99.5), (-0.5, 99.5)), bins=(100,100), norm=colors.LogNorm(1.0), cmap='PuRd')
-    ax6.set_title('ZOOM: Fit peak vs max channel (Zlog)')
-    ax6.set_xlabel('Max Count - Ped')
-    ax6.set_ylabel('Fit peak')
+    # _ = ax6.hist(fx_new, bins=100)
+    # ax6.set_title('Quick-Full')
+    # ax6.set_xlabel('ADC counts')
+    # #ax6.set_ylabel('Fit peak')
 
-    _ = nx1.hist2d(times, fxt, range=((-0.5, 29.5), (-0.5, 29.5)), bins=(30,30), norm=colors.LogNorm(1.0), cmap='PuRd')
+    _ = ax6.hist2d(newsaved, fx_new, range=((-0.5, 99.5), (-10.5, 89.5)), bins=(100,100), norm=colors.LogNorm(1.0), cmap='plasma')
+    ax6.set_title('Quick-Full vs Full (Zlog)')
+    ax6.set_xlabel('Full')
+    ax6.set_ylabel('Quick-Full')
+
+    _ = nx1.hist2d(times, fxt, range=((-0.5, 29.5), (-0.5, 29.5)), bins=(60,60), norm=colors.LogNorm(1.0), cmap='plasma')
     nx1.set_title('Time: Quick vs Full fit (Zlog)')
     nx1.set_xlabel('Full')
     nx1.set_ylabel('Quick')
 
-    _ = axx.hist2d(newsaved, fxamp, range=((0, 100), (0, 100)), bins=(100,100), norm=colors.LogNorm(1.0), cmap='PuRd')
+    _ = axx.hist2d(newsaved, fxamp, range=((-0.5, 199.5), (-0.5, 199.5)), bins=(200,200), norm=colors.LogNorm(1.0), cmap='plasma')
     axx.set_title('Peak: Quick vs Full fit (Zlog)')
     axx.set_xlabel('Full')
     axx.set_ylabel('Quick')
 
     axx.grid(b=True)
 
-    for ax in [axx, ax1, ax2, ax3, ax4, ax5, ax6, ax1, nx1, axx]: # Don't know why I need to add ax1 again but I have to
+    for ax in [ax6, axx, ax1, ax2, ax3, ax4, ax5, ax6, ax1, nx1, axx, ax6]: # Don't know why I need to add ax1 again but I have to
         ax.grid()
         ax.set_facecolor('ivory')
         ax.xaxis.set_zorder(10.0)
